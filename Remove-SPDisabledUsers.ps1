@@ -1,7 +1,7 @@
 <#
 This scripts builds a hash table of every active user and every object in your AD.
 This script loops thru every site, list/library, and Group in a site collection and checks to see if the user is is in the active user hash
-If it isn't it checks it against AD to see if it a user object in AD and removes it is not an active user object.  It will ignore 
+If it isn't it checks it against AD to see if it a user object in AD and removes it from the permissions list is not an active user object.  It will ignore 
 AD groups, mailboxes etc.  Make sure you understand your domain before implementing this. It builds a record of who is removed and emails it to an admin
 
 Highly recommend you comment out each remove user command and run first just to see who would be removed.  
