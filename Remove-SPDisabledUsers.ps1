@@ -1,3 +1,14 @@
+<#
+This scripts builds a hash table of every active user and every object in your AD.
+This script loops thru every site, list/library, and Group in a site collection and checks to see if the user is is in the active user hash
+If it isn't it checks it against AD to see if it a user object in AD and removes it is not an active user object.  It will ignore 
+AD groups, mailboxes etc.  Make sure you understand your domain before implementing this. It builds a record of who is removed and emails it to an admin
+
+Highly recommend you comment out each remove user command and run first just to see who would be removed.  
+
+
+#>
+
 asnp *sharepoint*
 ipmo *active*
 $activeusers = Get-ADUser -Filter {Enabled -eq $true} -SearchBase "OU=Domain Users,DC=domain,DC=local"
@@ -33,7 +44,6 @@ function Remove-DisabledUsersFromWebs
     {
     Write-Host "In web: $($web.title)" -ForegroundColor DarkYellow
     $webroleassignments = $web.RoleAssignments | where {$_.roledefinitionbindings.name -ne "Limited Access" -and $_.member.loginname -like "i:0#.w|*"}
-    #$webroleassignments.gettype()
         foreach ($webroleassignment in $webroleassignments)
         {
             Write-Host "Checking $($webroleassignment.member) in web: $($web.title)" -ForegroundColor DarkCyan
@@ -55,9 +65,8 @@ function Remove-DisabledUsersFromWebs
                     ResourceName = $web.title
                                              }
                     $global:removedusers += New-Object -TypeName psobject -Property $removeduser
-                    #Write-Output "Removed $($spuser.displayname) from web: $web" | Out-File $logfile -Append
                     Write-Host "Removed $($webspuser.displayname) from web: $web" -ForegroundColor DarkGreen
-                                        }
+                    }
                 }
     
         }
