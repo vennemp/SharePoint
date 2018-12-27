@@ -13,7 +13,7 @@ foreach ($activeuser in $activeusers)
                }
     $activeusershash.Add($activeuser.SamAccountName,$aduser)
     }
-$allwebs = (get-spsite https://sharepoint.cfpb.local).allwebs | where {$_.hasuniqueroleassignments -eq $true}
+$allwebs = (get-spsite https://sharepoint.domain.local).allwebs | where {$_.hasuniqueroleassignments -eq $true}
 $AD = Get-ADObject -filter * -properties distinguishedname,samaccountname | where {$_.samaccountname -ne $null}
 $ADHash = @{}
 foreach ($ADObject in $AD)
@@ -41,9 +41,9 @@ function Remove-DisabledUsersFromWebs
             $webobjectDN = $ADhash[$webusersam]
                 if ($activeusershash.values.samaccountname -notcontains $webusersam)
                 {
-                    if($webobjectDN.objectclass -eq "user" -and $webobjectDN.distinguishedname -notlike "*Mailbox*")
+                    if($webobjectDN.objectclass -eq "user")
                     {
-                    $webspuser = get-spuser $webroleassignment.Member.userlogin -web https://sharepoint.cfpb.local
+                    $webspuser = get-spuser $webroleassignment.Member.userlogin -web https://sharepoint.domain.local
                     $web.roleassignments.remove($webspuser)
                     $removeduser = [ordered]@{
                     UserName = $webspuser.displayname;
@@ -75,9 +75,9 @@ function Remove-DisabledUsersFromWebs
             $listobjectDN = $ADHash[$listusersam]
                 if ($activeusershash.values.samaccountname -notcontains $listusersam)
                 {
-                    if($listobjectDN.objectclass -eq "user" -and $listobjectDN.distinguishedname -notlike "*Mailbox*")
+                    if($listobjectDN.objectclass -eq "user")
                     {
-                    $listspuser = get-spuser $listroleassignment.member.userlogin -Web https://sharepoint.cfpb.local
+                    $listspuser = get-spuser $listroleassignment.member.userlogin -Web https://sharepoint.domain.local
                     $list.roleassignments.remove($listspuser)
                     $removeduser = [ordered]@{
                     UserName = $listspuser.displayname;
@@ -106,8 +106,8 @@ function Remove-DisabledUsersFromWebs
 
 function Remove-DisabledUsersfromGroups
 {
-$site = get-spsite https://sharepoint.cfpb.local
-$groups = $site.RootWeb.SiteGroups | where {$_.name -notlike "CFPB Auto Group*"}
+$site = get-spsite https://sharepoint.domain.local
+$groups = $site.RootWeb.SiteGroups
 $groupcount = 1
     foreach ($group in $groups)
     {
@@ -121,9 +121,9 @@ $groupcount = 1
         $memberobjectDN = $ADHash[$membersamname]
             if ($activeusershash.values.samaccountname -notcontains $membersamname)
             {
-                if($memberobjectDN.objectclass -eq "user" -and $memberobjectDN.distinguishedname -notlike "*Mailbox*")
+                if($memberobjectDN.objectclass -eq "user")
                 {
-                $groupspuser = get-spuser $member.userlogin -web https://sharepoint.cfpb.local
+                $groupspuser = get-spuser $member.userlogin -web https://sharepoint.domain.local
                 $group.RemoveUser($groupspuser)
                 $removeduser = [ordered]@{
                 UserName = $member.displayname;
