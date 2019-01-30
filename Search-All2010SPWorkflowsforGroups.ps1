@@ -6,7 +6,6 @@ $errors = @()
 Function GetXOMLFromWorkflowInstance($wfa)
 {
 clv xmlstring
-    [xml]$xmldocument =  $wfa.SoapXml
     $name = $wfa.Name
     $wfName = $name.Replace(" ", "%20")
     $webRelativeFolder = "Workflows1/" + $wfName
