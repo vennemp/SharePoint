@@ -80,7 +80,6 @@ if ($xml){clv xml}
                 if (Select-String -SimpleMatch "$($group)" -InputObject $xml -Quiet)
                 {
                 write-host "Found $($group) in $($i.name)" -ForegroundColor Green
-                Write-Output "Found $($group) in $($i.name)" >> $logfile
                     $wfprops = [ordered]@{
                     Group = $group;
                     WFName = $i.name;
