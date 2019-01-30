@@ -93,7 +93,7 @@ if ($xml){clv xml}
         }
 }
 
-$webs = (get-spsite https://sharepoint.cfpb.local).allwebs
+$webs = (get-spsite https://sharepoint.domain.local).allwebs
 
 foreach ($web in $webs)
 {
