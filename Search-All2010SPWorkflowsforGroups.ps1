@@ -1,5 +1,4 @@
 Add-PSSnapin "Microsoft.SharePoint.PowerShell"
-$logfile = "e:\temp\workflowgroups.txt"
 $csv = import-csv -Path "E:\GroupsforWorkflows.csv"
 $groupsinworkflow = @()
 $errors = @()
